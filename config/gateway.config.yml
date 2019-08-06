@@ -10,11 +10,16 @@ apiEndpoints:
   details:
     host: localhost
     paths: '/details/*'
+  assets:
+    host: localhost
+    paths: '/assets/*'
 serviceEndpoints:
-  moviesService:
+  movieService:
     url: 'http://localhost:3000'
-  detailsService: 
+  detailService: 
     url: 'http://localhost:3001'
+  assetService:
+    url: 'http://localhost:3002'
 policies:
   - basic-auth
   - cors
@@ -34,7 +39,7 @@ pipelines:
               message: ${req.method} ${req.originalUrl} 
       - proxy:
         - action:
-            serviceEndpoint: moviesService
+            serviceEndpoint: movieService
             changeOrigin: true
   detailsPipeline:
     apiEndpoints:
@@ -45,5 +50,16 @@ pipelines:
                 message: ${req.method} ${req.originalUrl} 
       - proxy:
         - action:
-            serviceEndpoint: detailsService
+            serviceEndpoint: detailService
+            changeOrigin: true
+  assetsPipeline:
+    apiEndpoints:
+      - assets
+    policies:
+      - log: 
+            - action:    
+                message: ${req.method} ${req.originalUrl} 
+      - proxy:
+        - action:
+            serviceEndpoint: assetService
             changeOrigin: true
