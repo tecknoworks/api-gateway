@@ -16,6 +16,15 @@ apiEndpoints:
   videos:
     host: localhost
     paths: '/videos/*'
+  tvShows:
+    host: localhost
+    paths: '/tv-shows/*'
+  history:
+    host: localhost
+    paths: '/history/*'
+  ris:
+    host: localhost
+    paths: '/ris*'
 serviceEndpoints:
   movieService:
     url: 'http://localhost:3000'
@@ -25,6 +34,12 @@ serviceEndpoints:
     url: 'http://localhost:3002'
   videoService:
     url: 'http://localhost:3003'
+  tvShowService:
+    url: 'http://localhost:3004'
+  historyService:
+    url: 'http://localhost:3005'
+  risService:
+    url: 'http://localhost:3006'
 policies:
   - basic-auth
   - cors
@@ -78,4 +93,37 @@ pipelines:
       - proxy:
         - action:
             serviceEndpoint: videoService
+            changeOrigin: true
+  tvShowPipeline:
+    apiEndpoints:
+      - tvShows
+    policies:
+      - log: 
+            - action:    
+                message: ${req.method} ${req.originalUrl} 
+      - proxy:
+        - action:
+            serviceEndpoint: tvShowService
+            changeOrigin: true
+  historyPipeline:
+    apiEndpoints:
+      - history
+    policies:
+      - log: 
+            - action:    
+                message: ${req.method} ${req.originalUrl} 
+      - proxy:
+        - action:
+            serviceEndpoint: historyService
+            changeOrigin: true
+  risPipeline:
+    apiEndpoints:
+      - ris
+    policies:
+      - log: 
+            - action:    
+                message: ${req.method} ${req.originalUrl} 
+      - proxy:
+        - action:
+            serviceEndpoint: risService
             changeOrigin: true
