@@ -25,6 +25,9 @@ apiEndpoints:
   ris:
     host: localhost
     paths: '/ris*'
+  auth: 
+    host: localhost
+    path: '/auth/*'
 serviceEndpoints:
   movieService:
     url: 'http://localhost:3000'
@@ -40,6 +43,8 @@ serviceEndpoints:
     url: 'http://localhost:3005'
   risService:
     url: 'http://localhost:3006'
+  authService:
+    url: 'http://localhost:3007'
 policies:
   - basic-auth
   - cors
@@ -49,6 +54,7 @@ policies:
   - oauth2
   - proxy
   - rate-limit
+  - jwt
 pipelines:
   moviePipeline:
     apiEndpoints:
@@ -126,4 +132,20 @@ pipelines:
       - proxy:
         - action:
             serviceEndpoint: risService
+            changeOrigin: true
+  authPipeline:
+    apiEndpoints:
+      - auth
+    policies:
+      - log: 
+            - action:    
+                message: ${req.method} ${req.originalUrl} 
+      - cors:  
+            - action:
+                origin: '*'
+                methods: 'HEAD,PUT,PATCH,POST,DELETE'
+                allowedHeaders: "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization"
+      - proxy:
+        - action:
+            serviceEndpoint: authService
             changeOrigin: true

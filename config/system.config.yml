@@ -1,12 +1,13 @@
 # Core
 db:
   redis:
-    emulate: true
+    host: localhost
+    port: 6379
     namespace: EG
 
 # plugins:
-  # express-gateway-plugin-example:
-  #   param1: 'param from system.config' 
+#   express-gateway-plugin-example:
+#     param1: 'param from system.config' 
 
 crypto:
   cipherKey: sensitiveKey
@@ -24,3 +25,7 @@ refreshTokens:
   timeToExpiry: 7200000
 authorizationCodes:
   timeToExpiry: 300000
+
+# plugins:
+#   example:
+#     package: example
