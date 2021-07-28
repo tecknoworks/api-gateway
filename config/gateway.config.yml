@@ -31,25 +31,30 @@ apiEndpoints:
   auth: 
     host: localhost
     path: '/auth/*'
+  seeder:
+    host: localhost
+    path: '/seeder/*'
 serviceEndpoints:
   movieService:
-    url: 'http://localhost:3000'
+    url: 'http://movie-service:3000'
   detailService: 
-    url: 'http://localhost:3001'
+    url: 'http://screenplay-details-service:3001'
   assetService:
-    url: 'http://localhost:3002'
+    url: 'http://asset-service:3002'
   videoService:
-    url: 'http://localhost:3003'
+    url: 'http://video-service:3003'
   tvShowService:
-    url: 'http://localhost:3004'
+    url: 'http://tv-show-service:3004'
   historyService:
-    url: 'http://localhost:3005'
+    url: 'http://video-history-service:3005'
   risService:
-    url: 'http://localhost:3006'
+    url: 'http://ris-service:3006'
   ratingService:
-    url: 'http://localhost:3008'
+    url: 'http://rating-service:3008'
   authService:
-    url: 'http://localhost:3007'
+    url: 'http://auth-service:3007'
+  seederService:
+    url: 'http://video-stream-docs:3020'
 policies:
   - basic-auth
   - cors
@@ -67,7 +72,7 @@ pipelines:
     policies:
       - log:
           - action:    
-              message: ${req.method} ${req.originalUrl} 
+              message: ${req.method} ${req.originalUrl}     
       - proxy:
         - action:
             serviceEndpoint: movieService
@@ -169,4 +174,20 @@ pipelines:
       - proxy:
         - action:
             serviceEndpoint: ratingService
+            changeOrigin: true
+  seederPipeline:
+    apiEndpoints:
+      - seeder
+    policies:
+      - log: 
+            - action:    
+                message: ${req.method} ${req.originalUrl} 
+      - cors:  
+            - action:
+                origin: '*'
+                methods: 'HEAD,PUT,PATCH,POST,DELETE'
+                allowedHeaders: "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization"
+      - proxy:
+        - action:
+            serviceEndpoint: seederService
             changeOrigin: true
